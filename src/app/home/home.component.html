@@ -6,36 +6,50 @@
     <mat-tab-group>
 
         <mat-tab label="Beginners">
+            <!--
+              " | async": subscribe to the observable and get the available values and also when the component
+              get destroyed, the async pipe will also unsubscribe from the observable avoiding memory leaks!
+            -->
+            <ng-container *ngIf="(beginnerCourses$ | async) as beginnerCourses; else notLoaded">
+              <ng-container *ngIf="beginnerCourses.length == 0; else hasData">
+                No Beginner Courses...
+              </ng-container>
+              <ng-template #hasData>
+                <mat-card *ngFor="let course of beginnerCourses" class="course-card mat-elevation-z10">
 
-          <mat-card *ngFor="let course of (beginnerCourses$ | async) as begginerCourses" class="course-card mat-elevation-z10">
+                  <mat-card-header>
+      
+                    <mat-card-title>{{course.description}}</mat-card-title>
+      
+                  </mat-card-header>
+      
+                  <img mat-card-image [src]="course.iconUrl">
+      
+                  <mat-card-content>
+                    <p>{{course.longDescription}}</p>
+                  </mat-card-content>
+      
+                  <mat-card-actions class="course-actions">
+      
+                    <button mat-button mat-raised-button color="primary" [routerLink]="['/courses', course.id]">
+                      VIEW COURSE
+                    </button>
+      
+                    <button mat-button mat-raised-button color="accent"
+                            (click)="editCourse(course)">
+                      EDIT
+                    </button>
+      
+                  </mat-card-actions>
+                </mat-card>
 
-            <mat-card-header>
+              </ng-template>
 
-              <mat-card-title>{{course.description}}</mat-card-title>
-
-            </mat-card-header>
-
-            <img mat-card-image [src]="course.iconUrl">
-
-            <mat-card-content>
-              <p>{{course.longDescription}}</p>
-            </mat-card-content>
-
-            <mat-card-actions class="course-actions">
-
-              <button mat-button mat-raised-button color="primary" [routerLink]="['/courses', course.id]">
-                VIEW COURSE
-              </button>
-
-              <button mat-button mat-raised-button color="accent"
-                      (click)="editCourse(course)">
-                EDIT
-              </button>
-
-            </mat-card-actions>
-
-          </mat-card>
-
+            </ng-container>
+            <ng-template #notLoaded>
+              Loading...
+            </ng-template>
+        
         </mat-tab>
 
         <mat-tab label="Advanced">

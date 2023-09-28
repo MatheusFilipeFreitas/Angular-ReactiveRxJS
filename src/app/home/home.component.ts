@@ -25,7 +25,15 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.coursesService.loadAllCourses();
+    this.beginnerCourses$ = this.coursesService.courses$
+      .pipe(
+        map(courses => courses.filter(course => course.category === "BEGINNER"))
+      );
+
+    this.advancedCourses$ = this.coursesService.courses$
+      .pipe(
+        map(courses => courses.filter(course => course.category === "ADVANCED"))
+      );
   }
 
   editCourse(course: Course) {
