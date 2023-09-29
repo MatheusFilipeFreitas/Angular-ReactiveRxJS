@@ -10,79 +10,17 @@
               " | async": subscribe to the observable and get the available values and also when the component
               get destroyed, the async pipe will also unsubscribe from the observable avoiding memory leaks!
             -->
-            <ng-container *ngIf="(beginnerCourses$ | async) as beginnerCourses; else notLoaded">
-              <ng-container *ngIf="beginnerCourses.length == 0; else hasData">
-                No Beginner Courses...
-              </ng-container>
-              <ng-template #hasData>
-                <mat-card *ngFor="let course of beginnerCourses" class="course-card mat-elevation-z10">
-
-                  <mat-card-header>
-      
-                    <mat-card-title>{{course.description}}</mat-card-title>
-      
-                  </mat-card-header>
-      
-                  <img mat-card-image [src]="course.iconUrl">
-      
-                  <mat-card-content>
-                    <p>{{course.longDescription}}</p>
-                  </mat-card-content>
-      
-                  <mat-card-actions class="course-actions">
-      
-                    <button mat-button mat-raised-button color="primary" [routerLink]="['/courses', course.id]">
-                      VIEW COURSE
-                    </button>
-      
-                    <button mat-button mat-raised-button color="accent"
-                            (click)="editCourse(course)">
-                      EDIT
-                    </button>
-      
-                  </mat-card-actions>
-                </mat-card>
-
-              </ng-template>
-
-            </ng-container>
-            <ng-template #notLoaded>
-              Loading...
+          <ng-container *ngIf="(beginnerCourses$ | async) as beginnerCourses; else notLoaded">
+            <ng-container *ngIf="beginnerCourses.length == 0; else hasData"> No Beginner Courses... </ng-container>
+            <ng-template #hasData>
+              <courses-card-list [courses]="beginnerCourses" (coursesChanged)="reloadCourses()"></courses-card-list>
             </ng-template>
-        
+          </ng-container>
+          <ng-template #notLoaded> Loading... </ng-template>
         </mat-tab>
 
         <mat-tab label="Advanced">
-
-          <mat-card *ngFor="let course of (advancedCourses$ | async) as advancedCourses" class="course-card mat-elevation-z10">
-
-            <mat-card-header>
-
-              <mat-card-title>{{course.description}}</mat-card-title>
-
-            </mat-card-header>
-
-            <img mat-card-image [src]="course.iconUrl">
-
-            <mat-card-content>
-              <p>{{course.longDescription}}</p>
-            </mat-card-content>
-
-            <mat-card-actions class="course-actions">
-
-              <button mat-button class="mat-raised-button mat-primary" [routerLink]="['/courses', course.id]">
-                VIEW COURSE
-              </button>
-
-              <button mat-button class="mat-raised-button mat-accent"
-                      (click)="editCourse(course)">
-                EDIT
-              </button>
-
-            </mat-card-actions>
-
-          </mat-card>
-
+          <courses-card-list [courses]="advancedCourses$ | async" (coursesChanged)="reloadCourses()"></courses-card-list>
         </mat-tab>
 
     </mat-tab-group>

@@ -12,20 +12,26 @@ export class CoursesService {
   courses$: Observable<Course[]>;
 
   constructor(private http: HttpClient) {
-    this.courses$ = this.loadAllCourses()
-      .pipe(
-        map(courses => courses.sort(sortCoursesBySeqNo)),
-        shareReplay() //used to avoid accidentally call for the api!
-      );
   }
 
   loadAllCourses = (): Observable<Course[]> => {
     return this.http.get<Course[]>("/api/courses")
       .pipe(
         map(res => res["payload"]),
+        shareReplay(), //used to avoid accidentally call for the api!
         catchError((err) => {
           throw new Error(err);
         })
       );
+  }
+
+  saveCourse = (id: string, changes: Partial<Course>): Observable<any> => {
+    return this.http.put(`/api/courses/${id}`, changes)
+      .pipe(
+        shareReplay(),
+        catchError((err) => {
+          throw new Error(err);
+        })
+      )
   }
 }
