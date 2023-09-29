@@ -38,15 +38,7 @@ export class HomeComponent implements OnInit {
 
     const loadCourses$ = this.loadingService.showUntilCompleted<Course[]>(this.coursesService.courses$);
     //or... const loadCourses$ = this.loadingService.showUntilCompleted(this.coursesService.courses$);
-
-    // this.loadingService.turnOn(); 
-
-    // this.coursesService.courses$ = this.coursesService.loadAllCourses()
-    // .pipe(
-    //   map(courses => courses.sort(sortCoursesBySeqNo)),
-    //   finalize(() => this.loadingService.turnOff())// when the subscription end or errors out
-    // );
-    
+        
     this.beginnerCourses$ = loadCourses$
     .pipe(
       map(courses => courses.filter(course => course.category === "BEGINNER"))
